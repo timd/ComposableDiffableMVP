@@ -2,8 +2,8 @@
 //  SceneDelegate.swift
 //  ComposableMVP
 //
-//  Created by Tim on 05.03.20.
-//  Copyright © 2020 duckett.de. All rights reserved.
+//  Created by Tim Duckett on 05.03.20.
+//  Copyright © 2020 tim@duckett.de. All rights reserved.
 //
 
 import UIKit

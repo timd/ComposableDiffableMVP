@@ -2,16 +2,14 @@
 //  AppDelegate.swift
 //  ComposableMVP
 //
-//  Created by Tim on 05.03.20.
-//  Copyright © 2020 duckett.de. All rights reserved.
+//  Created by Tim Duckett on 05.03.20.
+//  Copyright © 2020 tim@duckett.de. All rights reserved.
 //
 
 import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
-
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
