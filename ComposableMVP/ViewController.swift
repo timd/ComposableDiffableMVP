@@ -15,24 +15,48 @@ class ViewController: UIViewController {
     }
     
     @IBOutlet var collectionView: UICollectionView!
-    var dataSource: UICollectionViewDiffableDataSource<Section, Int>! = nil;
     
-    var items = Array(0..<99)
+    var dataSource: UICollectionViewDiffableDataSource<Section, Int>! = nil
+    
+    let items = Array(0..<99)
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
         
-        collectionView.collectionViewLayout = configureLayout()
-        collectionView.delegate = self
+        configureLayout()
         
-        setupData()
+        configureCollectionView()
+        
+        updateData(items: items, withAnimation: false)
         
     }
 
-    func setupData() {
+}
+
+extension ViewController {
+    
+    func configureLayout() {
         
-        // Setup datasource
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.33), heightDimension: .fractionalHeight(1.0))
+        
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        item.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(44.0))
+        
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        
+        let section = NSCollectionLayoutSection(group: group)
+        
+        let layout = UICollectionViewCompositionalLayout(section: section)
+        
+        collectionView.collectionViewLayout = layout
+        
+    }
+    
+    func configureCollectionView() {
+        
         dataSource = UICollectionViewDiffableDataSource<Section, Int>(collectionView: collectionView, cellProvider: { (collectionView: UICollectionView, indexPath: IndexPath, identifier: Int) -> UICollectionViewCell? in
             
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CVCell", for: indexPath) as UICollectionViewCell
@@ -43,85 +67,37 @@ class ViewController: UIViewController {
             
             cellLabel.text = "Cell \(identifier)"
             
-            return cell;
+            return cell
             
         })
         
-        // initial data
+    }
+    
+    func updateData(items: Array<Int>, withAnimation: Bool) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Int>()
         snapshot.appendSections([.main])
         snapshot.appendItems(items)
-        dataSource.apply(snapshot, animatingDifferences: false, completion: nil)
-        
+        dataSource.apply(snapshot, animatingDifferences: withAnimation, completion: nil)
     }
-    
-    func configureLayout() -> UICollectionViewLayout {
-        
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.33), heightDimension: .fractionalHeight(1.0))
-        
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        
-        item.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
-        
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44))
-        
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        //group.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
-        
-        let section = NSCollectionLayoutSection(group: group)
-        //section.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
-        
-        let layout = UICollectionViewCompositionalLayout(section: section)
-        
-        return layout
-        
-    }
-
-}
-
-extension ViewController {
     
     @IBAction func didTapOddButton(sender: UIButton) {
-        print("didTapOddButton")
-        
         let filteredItems = items.filter { (element) -> Bool in
             element % 2 != 0
         }
-        
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Int>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(filteredItems)
-        dataSource.apply(snapshot, animatingDifferences: true, completion: nil)
+        updateData(items: filteredItems, withAnimation: true)
     }
     
     @IBAction func didTapEvenButton(sender: UIButton) {
-        print("didTapOddButton")
-        
         let filteredItems = items.filter { (element) -> Bool in
             element % 2 == 0
         }
-        
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Int>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(filteredItems)
-        dataSource.apply(snapshot, animatingDifferences: true, completion: nil)    }
-
+        updateData(items: filteredItems, withAnimation: true)
+    }
+    
     @IBAction func didTapAllButton(sender: UIButton) {
-        print("didTapAllButton")
-
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Int>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(items)
-        dataSource.apply(snapshot, animatingDifferences: true, completion: nil)
-    }
-
-}
-
-extension ViewController: UICollectionViewDelegate {
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("Selected \(indexPath.row)")
+        updateData(items: items, withAnimation: true)
     }
     
 }
+
 
